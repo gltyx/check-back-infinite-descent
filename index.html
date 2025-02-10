@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Check Back: The Infinite Descent" property="og:title" />
+    <meta content="Prepare to check back later. April Fools 2025 game." property="og:description" />
+    <meta content="img/icon.png" property="og:image" />
+    <meta content="#008888" data-react-helmet="true" name="theme-color" />
+    <meta name="color-scheme" content="light only">
+    <title>Check Back: The Infinite Descent</title>
+    <link href="style.css?v103=1" rel="stylesheet" type="text/css" />
+    <link rel="icon" type="image/x-icon" href="img/icon.png">
+</head>
+<body>
+    <script src="chs.js"></script>
+    <script src="core.js"></script>
+    <canvas id="backgroundCanvas"></canvas>
+    <div id="backgroundCover"></div>
+    <div id="game">
+        <div id="XPBar">
+            <div id="XPBarBack"></div>
+            <p id="XPText">XP to next level: <span id="XPToNextLevel">0.0/50</span></p>
+        </div>
+        <div id="levelBar">
+            <p id="levelText">Level <span id="level">0</span></p>
+            <p id="rankText"><span id="rank">Beginner</span> clicker</p>
+        </div>
+
+        <div id="XPButtonContainer">
+            <div id="XPButtonDiv" style="position: relative; margin-top: 0; margin-left: 10px;">
+                <button style="color: #ddd; border: 4px solid #aaa" onclick="gainXP(0,true)">Collect all XP</button>
+                <button class="XPButton" onclick="gainXP(0)">Gain 10 XP</button>
+            </div>
+            <p style="margin-left: 10px; font-size: 22px">Next button unlocks at level <span id="nextButtonLevel">0</span></p>
+        </div>
+
+        <div id="potionMedals" style="position: absolute; top: 8px; right: 8px">
+            <div class="potionMedal"></div>
+            <div class="potionMedal"></div>
+            <div class="potionMedal"></div>
+            <div class="potionMedal"></div>
+            <div class="potionMedal"></div>
+            <div class="potionMedal"></div>
+            <div class="potionMedal"></div>
+            <div class="potionMedal"></div>
+        </div>
+        <div id="potionContainer">
+            <div id="chestButtonDiv" style="position: relative; margin-top: 0; margin-right: 10px; display: flex; flex-direction: column; align-items: flex-end;">
+                <button style="color: #ddd; border: 4px solid #aaa" onclick="openClosePotionList()">View potions</button>
+                <p style="margin-top: 15px; margin-bottom: 4px; color: #aaa; text-align: right">Chests have a double chance of<br>producing their corresponding rarity</p>
+                <button class="chestButton" onclick="openChest(0)"><img class="chestImage" src="img/chest1.png"> Open common chest</button>
+            </div>
+            <p style="margin-right: 10px; font-size: 22px; text-align: right">Next chest unlocks at level <span id="nextChestLevel">0</span><br>x<span id="XPPotionMultiplier" style="color: #9ff">1.00</span> total XP multiplier from potions</p>
+            <hr style="margin-right: 8px; width: 300px; max-width: 40vw;">
+            <p style="margin-right: 10px; font-size: 22px; text-align: right"><span id="potionGainText"></span></p>
+            <div id="potionGainImage"></div>
+        </div>
+
+        <div id="potionListDiv">
+            <h1 id="potionListTitle">Common potions</h1>
+            <p id="potionListSubtitle" style="margin-left: 12px; margin-top: 0">0 of 12 discovered - x1.00 XP gain</p>
+            <button id="potionListCloseButton" onclick="openClosePotionList()">X</button>
+            <button id="potionListLeftButton" onclick="previousPotionListRarity()">&lt;</button>
+            <button id="potionListRightButton" onclick="nextPotionListRarity()" >&gt;</button>
+            <div id="potionList">
+                <div class="potionListItem" onmouseover="displayPotionInfo(1)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(2)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(3)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(4)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(5)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(6)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(7)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(8)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(9)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(10)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(11)"></div>
+                <div class="potionListItem" onmouseover="displayPotionInfo(12)"></div>
+            </div>
+            <h1 id="potionInfoTitle" style="margin-left: 12px; margin-top: 12px; margin-bottom: 8px;"></h1>
+            <p id="potionInfo" style="margin-left: 12px; margin-top: 0">Hover over a potion to learn about it!</p>
+        </div>
+
+        <div id="optionsMenu">
+            <button style="margin-bottom: 30px" onclick="openCloseOptionsMenu()">Close</button>
+            <button id="enableDisableBackgroundButton" onclick="enableDisableBackground()">Background on/off</button>
+            <button onclick="exportGame()">Export</button>
+            <button onclick="importGame()">Import</button>
+            <button style="background-color: #522" onclick="hardReset()">Hard reset</button>
+            <p style="text-align: center; width: 100%; margin: 0; margin-top: 12px;">Time played: <span id="timePlayed">0s</span><br>Potions opened: <span id="potionsOpened">0</span><br>(<span id="alreadyDiscoveredPotions">0</span> already discovered)</p>
+        </div>
+        <button id="optionsMenuButton" onclick="openCloseOptionsMenu()">Options</button>
+        <p style="position: absolute; bottom: 8px; right: 8px; text-align: right; margin: 0; color: #888">Check Back: The Infinite Descent v0.1.3</p>
+    </div>
+
+    <script src="constants.js?v1032=1"></script>
+    <script src="script.js?v1034=1"></script>
+    <script src="background.js"></script>
+    <script defer>setAutoSave()</script>
+<!--客服 开始-->
+<script src="//g8hh.github.io/static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="//g8hh.github.io/static/css/kf.css" type="text/css" media="screen" charset="utf-8">
+<script src="//g8hh.github.io/static/js/kf.js"></script>
+<!-- 客服 结束 -->
+<!--站长统计-->
+    <div style="display: none">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6581389daf4dd6fe7dbb4d20fdcb52a6";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+    </div>
+</body>
+</html>
